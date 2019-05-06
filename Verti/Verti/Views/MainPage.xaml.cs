@@ -8,11 +8,13 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.IO;
+using Verti.Views;
 
 namespace Verti
 {
 	public partial class MainPage : ContentPage
 	{
+        Page page;
         HttpClient client;
         string file_path;
 		int last_iter = 0;
@@ -21,6 +23,8 @@ namespace Verti
         public MainPage()
 		{
 			InitializeComponent();
+
+            page = new LibraryListPage();
 		}
 
 		private async Task ReadingText(string randomText, int time, int last)
@@ -79,5 +83,10 @@ namespace Verti
 			var file1 = await CrossFilePicker.Current.PickFile();
 			file_path = file1.FilePath;
 		}
-	}
+
+        private void Library_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(page);
+        }
+    }
 }

@@ -11,7 +11,11 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using SQLite;
+using Verti.Droid.Persistance;
 using Verti.Models;
+using Xamarin.Forms;
+
+[assembly: Dependency(typeof(SQLiteDb))]
 
 namespace Verti.Droid.Persistance
 {

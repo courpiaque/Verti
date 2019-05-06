@@ -34,5 +34,10 @@ namespace Verti.Views
             listView.ItemsSource = _books;
             base.OnAppearing();
         }
+
+        private void Btn_Clicked(object sender, EventArgs e)
+        {
+            (BindingContext as LibraryListPageViewModel).AddingBook();
+        }
     }
 }

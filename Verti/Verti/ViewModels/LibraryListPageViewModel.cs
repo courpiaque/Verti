@@ -8,7 +8,7 @@ namespace Verti.ViewModels
 {
     public class LibraryListPageViewModel
     {
-        public List<Book> books;
+        public List<Book> books = new List<Book>();
         private SQLiteAsyncConnection _connection;
 
         public async void PopulateList(SQLiteAsyncConnection connection)

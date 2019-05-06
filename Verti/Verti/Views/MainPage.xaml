@@ -21,6 +21,10 @@
             x:Name="Start"
             Clicked="Start_Clicked"
             Text="Start"/>
+        <Button
+            x:Name="Library"
+            Clicked="Library_Clicked"
+            Text="Library"/>
     </StackLayout>
 
 </ContentPage>
