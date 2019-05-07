@@ -24,7 +24,7 @@ namespace Verti
 		{
 			InitializeComponent();
 
-            BindingContext = new MainPageViewModel();
+            BindingContext = new MainPageViewModel(new PageService());
 
             page = new LibraryListPage();
 		}
@@ -68,9 +68,9 @@ namespace Verti
             file_path = await (BindingContext as MainPageViewModel).SelectingFile();
 		}
 
-        private void Library_Clicked(object sender, EventArgs e)
+        private async void Library_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(page);
+           await (BindingContext as MainPageViewModel).LibraryPage();
         }
     }
 }

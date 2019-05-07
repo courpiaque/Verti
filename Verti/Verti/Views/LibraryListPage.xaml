@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Verti.Views.LibraryListPage">
     <StackLayout>
-        <Button x:Name="btn" Text="Add Book" Clicked="Btn_Clicked"/>
+        <Button x:Name="btn" Text="Add Book" Command="{Binding AddBookCommand}"/>
         <ListView 
                   ItemsSource="{Binding Books}"
                   SelectedItem="{Binding SelectedBook, Mode=TwoWay}"

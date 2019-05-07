@@ -17,6 +17,8 @@
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
 
+        <Label Text="{Binding Word}"/>
+
         <Button
             x:Name="Start"
             Clicked="Start_Clicked"

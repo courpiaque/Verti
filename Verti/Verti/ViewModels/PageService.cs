@@ -13,7 +13,7 @@ namespace Verti.ViewModels
             return await App.Current.MainPage.DisplayAlert(title, message, ok, cancel);
         }
 
-        public async Task PushAsync(Page page)
+        public async Task PushModalAsync(Page page)
         {
             await App.Current.MainPage.Navigation.PushModalAsync(page);
         }

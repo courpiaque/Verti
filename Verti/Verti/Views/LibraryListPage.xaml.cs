@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 using Verti.ViewModels;
 using SQLite;
 using System.Collections.ObjectModel;
+using Verti.Persistance;
 
 namespace Verti.Views
 {
@@ -17,19 +18,29 @@ namespace Verti.Views
     {
         public LibraryListPage()
         {
-            BindingContext = new LibraryListPageViewModel(new PageService());
+            var bookStore = new SQLiteBookStore(DependencyService.Get<ISQLiteDb>());
+            var pageService = new PageService();
+            ViewModel = new LibraryListPageViewModel(pageService, bookStore);
 
             InitializeComponent();
         }
 
-        private void Btn_Clicked(object sender, EventArgs e)
+        private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            (BindingContext as LibraryListPageViewModel).AddBook();
+            ViewModel.SelectBookCommand.Execute(e.SelectedItem);
         }
 
-        private async void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        protected override void OnAppearing()
         {
-            await (BindingContext as LibraryListPageViewModel).SelectBook(e.SelectedItem as Book);
+            ViewModel.LoadDataCommand.Execute(null);
+
+            base.OnAppearing();
+        }
+
+        private LibraryListPageViewModel ViewModel
+        {
+            get { return BindingContext as LibraryListPageViewModel; }
+            set { BindingContext = value; }
         }
     }
 }
