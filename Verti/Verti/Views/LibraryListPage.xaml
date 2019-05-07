@@ -4,7 +4,10 @@
              x:Class="Verti.Views.LibraryListPage">
     <StackLayout>
         <Button x:Name="btn" Text="Add Book" Clicked="Btn_Clicked"/>
-        <ListView x:Name="listView">
+        <ListView 
+                  ItemsSource="{Binding Books}"
+                  SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
+                  ItemSelected="ListView_ItemSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Name}" Detail="{Binding Status}" />

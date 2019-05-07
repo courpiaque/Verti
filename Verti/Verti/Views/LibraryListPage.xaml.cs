@@ -15,29 +15,21 @@ namespace Verti.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LibraryListPage : ContentPage
     {
-        private SQLiteAsyncConnection _connection;
-        private ObservableCollection<Book> _books;
-
         public LibraryListPage()
         {
+            BindingContext = new LibraryListPageViewModel(new PageService());
+
             InitializeComponent();
-
-            BindingContext = new LibraryListPageViewModel();
-            _connection = DependencyService.Get<ISQLiteDb>().GetConnection();
-        }
-
-        protected override void OnAppearing()
-        {
-            var context = (BindingContext as LibraryListPageViewModel);
-            context.PopulateList(_connection);
-            _books = new ObservableCollection<Book>(context.books);
-            listView.ItemsSource = _books;
-            base.OnAppearing();
         }
 
         private void Btn_Clicked(object sender, EventArgs e)
         {
-            (BindingContext as LibraryListPageViewModel).AddingBook();
+            (BindingContext as LibraryListPageViewModel).AddBook();
+        }
+
+        private async void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            await (BindingContext as LibraryListPageViewModel).SelectBook(e.SelectedItem as Book);
         }
     }
 }

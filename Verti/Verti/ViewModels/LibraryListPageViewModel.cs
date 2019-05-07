@@ -1,28 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using SQLite;
+using Verti.Views;
 using Verti.Models;
+using Xamarin.Forms;
 
 namespace Verti.ViewModels
 {
-    public class LibraryListPageViewModel
-    {
-        public List<Book> books = new List<Book>();
-        private SQLiteAsyncConnection _connection;
-
-        public async void PopulateList(SQLiteAsyncConnection connection)
+    public class LibraryListPageViewModel : BaseViewModel
+    { 
+        public ObservableCollection<Book> Books { get; private set; } = new ObservableCollection<Book>();
+        public Book SelectedBook
         {
-            await connection.CreateTableAsync<Book>();
-            books = await connection.Table<Book>().ToListAsync();
-            _connection = connection;
+            get { return _selectedBook; }
+            set { SetValue(ref _selectedBook, value); }
+
         }
 
-        public void AddingBook()
+        private Book _selectedBook;
+
+        private readonly IPageService _pageService;
+        public LibraryListPageViewModel(IPageService pageService)
+        {
+            _pageService = pageService;
+        }
+
+        public void AddBook()
         {
             var book = new Book { Name = "1984 " + DateTime.Now.Ticks };
-            _connection.InsertAsync(book);
-            books.Add(book);
+            Books.Add(book);
+        }
+
+        public async Task SelectBook(Book book)
+        {
+            if (book == null)
+                return;
+
+            SelectedBook = null;
+
+            await _pageService.PushAsync(new BookDetailPage(book));
         }
     }
 }
