@@ -12,7 +12,7 @@ using Android.Views;
 using Android.Widget;
 using SQLite;
 using Verti.Droid.Persistance;
-using Verti.Models;
+using Verti.Persistance;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SQLiteDb))]

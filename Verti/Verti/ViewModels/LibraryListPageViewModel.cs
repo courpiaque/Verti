@@ -15,7 +15,7 @@ namespace Verti.ViewModels
     {
         private Book _selectedBook;
         private readonly IPageService _pageService;
-        private IBookStore _bookStore;
+        private readonly IBookStore _bookStore;
         private bool _isDataLoaded;
 
         public ObservableCollection<Book> Books { get; private set; } = new ObservableCollection<Book>();
@@ -36,14 +36,35 @@ namespace Verti.ViewModels
             _pageService = pageService;
             _bookStore = bookStore;
 
-            AddBookCommand = new Command(AddBook);
+            AddBookCommand = new Command(async () => await AddBook());
             SelectBookCommand = new Command<Book>(async vm => await SelectBook(vm));
+            LoadDataCommand = new Command(async () => await LoadData());
         }
 
-        private void AddBook()
+        private async Task LoadData()
         {
-            var book = new Book { Name = "1984 " + DateTime.Now.Ticks };
-            Books.Add(book);
+            if (_isDataLoaded)
+                return;
+
+            _isDataLoaded = true;
+
+            var books = await _bookStore.GetBookAsync();
+
+            foreach (var b in books)
+                Books.Add(b);
+        }
+
+        private async Task AddBook()
+        {
+            var viewModel = new BookDetailPageViewModel(new Book(), _pageService, _bookStore);
+
+            viewModel.BookAdded += (source, book) =>
+            {
+                Books.Add(book);
+            };
+
+            await _pageService.PushModalAsync(new BookDetailPage(viewModel));
+
         }
 
         private async Task SelectBook(Book book)
@@ -53,7 +74,28 @@ namespace Verti.ViewModels
 
             SelectedBook = null;
 
-            await _pageService.PushModalAsync(new BookDetailPage(book));
+            var viewModel = new BookDetailPageViewModel(book, _pageService, _bookStore);
+
+            viewModel.BookUpdated += (source, updatedBook) =>
+            {
+                book.Id = updatedBook.Id;
+                book.Name = updatedBook.Name;
+                book.Status = updatedBook.Status;
+            };
+
+            await _pageService.PushModalAsync(new BookDetailPage(viewModel));
+        }
+
+        private async Task DeleteBook(Book book)
+        {
+            var a = "";
+            if (await _pageService.DisplayAlert("Warning", $"Are you sure you want to delete {book.Name}?", "YES", "NO"))
+            {
+                Books.Remove(book);
+
+                var b = await _bookStore.GetBook(book.Id);
+                await _bookStore.DeleteBook(b);
+            }
         }
     }
 }

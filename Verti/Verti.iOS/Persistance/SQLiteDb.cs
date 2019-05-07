@@ -7,6 +7,7 @@ using Verti.Models;
 using Foundation;
 using UIKit;
 using SQLite;
+using Verti.Persistance;
 
 namespace Verti.iOS.Persistance
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Verti.Models;
+using Verti.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,11 +13,8 @@ namespace Verti.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BookDetailPage : ContentPage
     {
-        private Book _book;
-        public BookDetailPage(Book book)
+        public BookDetailPage(BookDetailPageViewModel viewModel)
         {
-            _book = book;
-
             InitializeComponent();
         }
     }
