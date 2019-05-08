@@ -2,31 +2,40 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Verti"
-             x:Class="Verti.MainPage">
+             x:Class="Verti.MainPage"
+             BackgroundColor="AntiqueWhite">
 
-    <StackLayout BindingContext="{x:Reference slider}">
-        <Label Text="{Binding Value, StringFormat='Words per minute: {0:0}'}"
-               x:Name="wpm_text"
-               HorizontalOptions="Center">
-        </Label>
-        <Slider Maximum="600" Minimum="60" x:Name="slider"/>
-        <!-- Place new controls here -->
-        <Button Text="Welcome, please select file to read!"
-           x:Name="main_text"
-           Clicked = "Select_File"
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+    <AbsoluteLayout>
+        <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.02, 1, 100" 
+                     AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional">
+            <Label 
+                Text="{Binding SliderValue, StringFormat='Words per minute: {0:0}'}"
+                FontSize="Large"
+                HorizontalOptions="Center"
+                IsVisible="{Binding Visibility}"/>
+            <Slider 
+                Value="{Binding SliderValue, Mode=TwoWay}" 
+                Maximum="600" Minimum="60" IsVisible="{Binding Visibility}"/>
+            </StackLayout>
+        
+            <Label 
+                Text="{Binding MainText}" HorizontalOptions="Center" FontSize="Large"
+                AbsoluteLayout.LayoutBounds="0.5, 0.4, 1, 50"
+                AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"/>
+            <Button
+                AbsoluteLayout.LayoutBounds="0.5, 0.8, 80, 80"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                CornerRadius="40"
+                BackgroundColor="Wheat"
+                Command="{Binding StartClickedCommand}"
+                Text="{Binding ButtonText}"/>
 
-        <Label Text="{Binding Word}"/>
-
-        <Button
-            x:Name="Start"
-            Clicked="Start_Clicked"
-            Text="Start"/>
-        <Button
-            x:Name="Library"
-            Clicked="Library_Clicked"
-            Text="Library"/>
-    </StackLayout>
+            <Button 
+                AbsoluteLayout.LayoutBounds="0.5, 1, 1, 50"
+                AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+                BackgroundColor="AntiqueWhite"
+                Text="Select file to read"
+                Command="{Binding LibraryListPageCommand}"/>
+    </AbsoluteLayout>
 
 </ContentPage>

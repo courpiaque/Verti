@@ -10,7 +10,13 @@
                   ItemSelected="ListView_ItemSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Status}" />
+                    <TextCell Text="{Binding Name}" Detail="{Binding Status}">
+                        <TextCell.ContextActions>
+                            <MenuItem	Text="Reset Progress" />
+                            <MenuItem	Text="Delete" IsDestructive="true" 
+                                        Clicked="MenuItem_Clicked" />
+                        </TextCell.ContextActions>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

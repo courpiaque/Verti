@@ -27,7 +27,8 @@ namespace Verti.Views
 
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ViewModel.SelectBookCommand.Execute(e.SelectedItem);
+            //ViewModel.SelectBookCommand.Execute(e.SelectedItem);
+            return;
         }
 
         protected override void OnAppearing()
@@ -41,6 +42,13 @@ namespace Verti.Views
         {
             get { return BindingContext as LibraryListPageViewModel; }
             set { BindingContext = value; }
+        }
+
+        private void MenuItem_Clicked(object sender, EventArgs e)
+        {
+            var b = sender as MenuItem;
+            var book = b.BindingContext as Book;
+            ViewModel.DeleteBookCommand.Execute(book);
         }
     }
 }
