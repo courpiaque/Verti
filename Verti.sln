@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verti.Android", "Verti\Vert
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verti.iOS", "Verti\Verti.iOS\Verti.iOS.csproj", "{77D4FD62-EE5C-4189-99FA-700AA236E984}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verti", "Verti\Verti\Verti.csproj", "{8B1D0B68-E526-4C5F-9340-1C3C76B7F633}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verti", "Verti\Verti\Verti.csproj", "{8B1D0B68-E526-4C5F-9340-1C3C76B7F633}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

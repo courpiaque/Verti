@@ -16,18 +16,16 @@ namespace Verti.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LibraryListPage : ContentPage
     {
-        public LibraryListPage()
+        public LibraryListPage(LibraryListPageViewModel viewModel)
         {
-            var bookStore = new SQLiteBookStore(DependencyService.Get<ISQLiteDb>());
-            var pageService = new PageService();
-            ViewModel = new LibraryListPageViewModel(pageService, bookStore);
+            ViewModel = viewModel;
 
             InitializeComponent();
         }
 
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            //ViewModel.SelectBookCommand.Execute(e.SelectedItem);
+            ViewModel.SelectBookCommand.Execute(e.SelectedItem);
             return;
         }
 

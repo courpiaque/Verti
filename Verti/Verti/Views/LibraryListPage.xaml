@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Verti.Views.LibraryListPage">
+             x:Class="Verti.Views.LibraryListPage"
+             BackgroundColor="{Binding BackColor}">
     <StackLayout>
-        <Button x:Name="btn" Text="Add Book" Command="{Binding AddBookCommand}"/>
-        <ListView 
+        <Button x:Name="btn" Text="Add PDF file" Command="{Binding AddBookCommand}"/>
+        <ListView BackgroundColor="{Binding BackColor}"
                   ItemsSource="{Binding Books}"
                   SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
-                  ItemSelected="ListView_ItemSelected">
+                  ItemSelected="ListView_ItemSelected"
+                  SeparatorColor="{Binding FrontColor}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Status}">
+                    <TextCell Text="{Binding Name}" Detail="{Binding Progress}" DetailColor="Orange">
                         <TextCell.ContextActions>
                             <MenuItem	Text="Reset Progress" />
                             <MenuItem	Text="Delete" IsDestructive="true" 

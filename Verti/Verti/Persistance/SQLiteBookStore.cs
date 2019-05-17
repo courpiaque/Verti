@@ -39,6 +39,9 @@ namespace Verti.Persistance
 
         public async Task UpdateBook(Book book)
         {
+            System.Diagnostics.Debug.Write("Current progress: "+ book.Progress);
+            System.Diagnostics.Debug.Write("Current first: "+ book.First);
+            System.Diagnostics.Debug.Write("Last: "+ book.Last);
             await _connection.UpdateAsync(book); 
         }
     }

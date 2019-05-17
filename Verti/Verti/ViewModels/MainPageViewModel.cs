@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Verti.Models;
 using Verti.Views;
 using Xamarin.Forms;
 
@@ -15,17 +16,39 @@ namespace Verti.ViewModels
 {
     public class MainPageViewModel : BaseViewModel
     {
-        private HttpClient client;
-        private string file_path;
-        private int last_iter = 0;
-        private char[] charSeparators = new char[] { ' ' };
         private IPageService _pageService;
+        private IBookStore _bookStore;
+        private readonly char[] charSeparators = new char[] { ' ' };
 
+        private bool _isBookSelected = false;
         private bool _visibility = true;
         private string _btnText = "Start";
-        private string _mainText = "Welcome";
+        private string _mainText = "Select pdf from library.";
         private int _sliderValue = 60;
+        private Book _selectedBook;
+        private string _backColor = "#ffffff";
+        private string _frontColor = "#000000";
 
+        public string BackColor
+        {
+            get { return _backColor; }
+            set { SetValue(ref _backColor, value); }
+        }
+        public string FrontColor
+        {
+            get { return _frontColor; }
+            set { SetValue(ref _frontColor, value); }
+        }
+        public bool IsBookSelected
+        {
+            get { return _isBookSelected; }
+            set { SetValue(ref _isBookSelected, value); }
+        }
+        public Book SelectedBook
+        {
+            get { return _selectedBook; }
+            set { _selectedBook = value; }
+        }
         public bool Visibility
         {
             get { return _visibility; }
@@ -39,7 +62,7 @@ namespace Verti.ViewModels
         public string MainText
         {
             get { return _mainText; }
-            private set { SetValue(ref _mainText, value); }
+            set { SetValue(ref _mainText, value); }
         }
         public int SliderValue
         {
@@ -51,69 +74,74 @@ namespace Verti.ViewModels
         public ICommand LibraryListPageCommand { get; private set; }
         public ICommand StartClickedCommand { get; private set; }
 
-        public MainPageViewModel(IPageService pageService)
+        public MainPageViewModel(IPageService pageService, IBookStore bookStore)
         {
             _pageService = pageService;
+            _bookStore = bookStore;
 
             //PickPdfCommand = new Command(async () => await PickPdf());
             StartClickedCommand = new Command(async () => await StartClicked());
             LibraryListPageCommand = new Command(async () => await LibraryPage());
         }
-
-        public async Task<string> GetTextFromPDFAsync(string path)
+        
+        public void ChangeTheme(bool status)
         {
-            client = new HttpClient();
-            client.BaseAddress = new Uri("http://verting.herokuapp.com/PdfToText/");
+            if (status)
+            {
+                BackColor = "#000000";
+                FrontColor = "#ffffff";
+            }
 
-            var form = new MultipartFormDataContent();
-            var stream = File.OpenRead(path);
-            var streamContent = new StreamContent(stream);
-
-            form.Add(streamContent, "file.pdf", stream.Name);
-
-            var response = await client.PostAsync("", form);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            return responseString;
+            else
+            {
+                BackColor = "#ffffff";
+                FrontColor = "#000000";
+            }
+                
         }
-
         public async Task LibraryPage()
         {
-            await _pageService.PushModalAsync(new LibraryListPage());
+            var viewModel = new LibraryListPageViewModel(_pageService, _bookStore, this);
+            await _pageService.PushModalAsync(new LibraryListPage(viewModel));
         }
 
-        private async Task ReadingText(string randomText, int time, int last)
-        {            
-            List<string> a = randomText.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries).ToList();
-            for (int i = last; i < a.Count; i++)
+        private async Task ReadingText(List<string> content, int time)
+        {
+            content.RemoveAll(string.IsNullOrWhiteSpace);
+            while (SelectedBook.First < content.Count)
             {
-                MainText = a[i];
-                System.Diagnostics.Debug.Write(MainText);
+                MainText = content[SelectedBook.First];
                 await Task.Delay(time);
+                SelectedBook.First++;
+
                 if (ButtonText == "Start")
-                {
-                    last_iter = i;
                     break;
-                }
             }
+            
         }
 
         private async Task StartClicked()
         {
             Visibility = !Visibility;
 
-            System.Diagnostics.Debug.Write(Visibility);
-
-            string randomText = await GetTextFromPDFAsync(file_path);
             if (ButtonText == "Start")
             {
                 ButtonText = "Stop";
-                await ReadingText(await GetTextFromPDFAsync(file_path), (int)(60000 / SliderValue), last_iter);
+                await ReadingText(await LoadFromTxt(SelectedBook.Path), (int)(60000 / SliderValue));
+                ButtonText = "Start";
             }
             else
             {
+                await _bookStore.UpdateBook(SelectedBook);
                 ButtonText = "Start";
             }
+        }
+
+        public async Task<List<string>> LoadFromTxt(string path)
+        {
+            var content = File.ReadAllLines(path);
+            List<string> allLinesText = new List<string>(content);           
+            return allLinesText;
         }
     }
 }
